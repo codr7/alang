@@ -19,9 +19,10 @@ int main() {
   lgpp::Stack s;
   lgpp::Env env;
   stringstream buf;
+  lgpp::REPL repl(cin, cout);
   
-  lgpp::repl(cin, [&vm, &p, &s, &env, &buf](auto &in) {
-    if (in.empty()) {
+  repl.on_getline = [&vm, &p, &s, &env, &buf](auto &line) {
+    if (line.empty()) {
       try {
 	if (buf.tellp()) {
 	  lgpp::parse(p, buf.str());
@@ -38,15 +39,16 @@ int main() {
 	  s.clear();
 	}
       } catch (exception& e) { cout << e.what() << endl; }
-
+      
       cout << s << endl << ": ";
     } else {
-      buf << in;
+      buf << line;
       cout << ". ";
     }
+    
+    return true;    
+  };
 
-    return true;
-  });
-  
+  lgpp::enter(repl);
   return 0;
 }
