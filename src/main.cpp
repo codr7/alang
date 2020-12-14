@@ -16,6 +16,8 @@ int main() {
 
   lgpp::VM vm;
   Parser p("repl");
+  p.alts.push_front(lgpp::parse_group('(', ')'));
+
   lgpp::Stack s;
   lgpp::Env env;
   stringstream buf;
