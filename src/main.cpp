@@ -4,6 +4,7 @@
 #include <lgpp/stack.hpp>
 #include <lgpp/vm.hpp>
 
+#include "alang/env.hpp"
 #include "alang/parser.hpp"
 #include "alang/toks.hpp"
 
@@ -17,10 +18,13 @@ int main() {
     ": ";
   
   lgpp::VM vm;
+
   lgpp::Parser p("repl");
-  init_parser(p);
+  init(p);
 
   lgpp::Env env;
+  init(env);
+  
   stringstream buf;
   lgpp::REPL repl(cin, cout);
   
