@@ -3,7 +3,9 @@
 #include <lgpp/repl.hpp>
 #include <lgpp/stack.hpp>
 #include <lgpp/vm.hpp>
+
 #include "alang/parser.hpp"
+#include "alang/toks.hpp"
 
 int main() {
   using namespace alang;
@@ -13,17 +15,16 @@ int main() {
     "Press Return on empty line to eval." << endl <<
     "Empty eval clears stack and Ctrl+D exits." << endl << endl <<
     ": ";
-
+  
   lgpp::VM vm;
   Parser p("repl");
-  p.alts.push_front(lgpp::parse_group('(', ')'));
+  init_parser(p);
 
-  lgpp::Stack s;
   lgpp::Env env;
   stringstream buf;
   lgpp::REPL repl(cin, cout);
   
-  repl.on_getline = [&vm, &p, &s, &env, &buf](auto &line) {
+  repl.on_getline = [&vm, &p, &env, &buf](auto &line) {
     if (line.empty()) {
       try {
 	if (buf.tellp()) {
@@ -35,14 +36,14 @@ int main() {
 	  
 	  if (lgpp::emit_pc(t) > start_pc) {
 	    lgpp::emit<lgpp::ops::Stop>(t);
-	    lgpp::eval(t, start_pc, s);
+	    lgpp::eval(t, start_pc);
 	  }
 	} else {
-	  s.clear();
+	  lgpp::get_stack(vm).clear();
 	}
       } catch (exception& e) { cout << e.what() << endl; }
       
-      cout << s << endl << ": ";
+      cout << lgpp::get_stack(vm) << endl << ": ";
     } else {
       buf << line;
       cout << ". ";
