@@ -17,7 +17,7 @@ int main() {
     ": ";
   
   lgpp::VM vm;
-  Parser p("repl");
+  lgpp::Parser p("repl");
   init_parser(p);
 
   lgpp::Env env;

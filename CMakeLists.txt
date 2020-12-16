@@ -8,11 +8,6 @@ add_compile_options(-std=c++17 -stdlib=libc++ -Wall -Werror -O2 -g)
 
 file(GLOB_RECURSE src src/alang/*.cpp)
 
-add_executable(test ${src} src/test.cpp)
-target_include_directories(test PUBLIC src/)
-target_link_libraries(test /usr/local/lib/liblgpp.a)
-target_include_directories(test PUBLIC /usr/local/include/)
-
 add_executable(alang ${src} src/main.cpp)
 target_include_directories(alang PUBLIC src/)
 target_link_libraries(alang /usr/local/lib/liblgpp.a)

@@ -6,9 +6,8 @@
 
 namespace alang {
   using namespace std;
-  using Parser = lgpp::Parser;
 
-  inline void init_parser(Parser &parser) {
+  inline void init_parser(lgpp::Parser &parser) {
     parser.alts.push_front(lgpp::parse_group('(', ')'));
     parser.alts.push_front(lgpp::parse_group<toks::Stack>('[', ']'));
   }
