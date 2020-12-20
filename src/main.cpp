@@ -49,8 +49,8 @@ int main() {
       
       cout << lgpp::get_stack(vm) << endl << ": ";
     } else {
-      buf << line;
-      cout << ". ";
+      buf << line << endl;
+      cout << " ";
     }
     
     return true;    

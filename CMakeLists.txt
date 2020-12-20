@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(libalang)
+project(alang)
 
 set(CMAKE_CXX_COMPILER clang++)
 
@@ -13,8 +13,4 @@ target_include_directories(alang PUBLIC src/)
 target_link_libraries(alang /usr/local/lib/liblgpp.a)
 target_include_directories(alang PUBLIC /usr/local/include/)
 
-file(GLOB inc src/alang/*.hpp)
-install(FILES ${inc} DESTINATION include/alang)
-
-install(FILES build/libalang.a DESTINATION lib)
 install(FILES build/alang DESTINATION bin)

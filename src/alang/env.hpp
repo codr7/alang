@@ -2,6 +2,7 @@
 #define ALANG_ENV_HPP
 
 #include <lgpp/env.hpp>
+#include <lgpp/ops/go.hpp>
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
 
@@ -9,7 +10,9 @@ namespace alang {
   using namespace std;
   using namespace lgpp;
 
-  Env& set_macro(Env&  env, string id, Macro::Imp imp) { return set(env, id, types::Macro, id, imp); }
+  inline Env& set_label(Env&  env, string id, PC pc) { return set(env, id, types::Label, id, pc); }
+
+  inline Env& set_macro(Env&  env, string id, Macro::Imp imp) { return set(env, id, types::Macro, id, imp); }
 
   inline void init(lgpp::Env& env) {
     set(env, "Coro", types::Meta, &types::Coro);
@@ -23,9 +26,18 @@ namespace alang {
     set(env, "Stack", types::Meta, &types::Stack);
     set(env, "Thread", types::Meta, &types::Thread);
 
+    set_macro(env, "go", [](Parser& in, Thread &out, Env& env) {
+      auto idt = pop(in);
+      auto id = idt.as<toks::Id>().name;
+      auto target = find(env, id);
+      if (!target) { throw EParse(idt.pos, "Unknown label: ", id); }
+      emit<ops::Go>(out, target->as(types::Label));
+    });
+    
     set_macro(env, "label", [](Parser& in, Thread &out, Env& env) {
-      auto id = pop(in).as<toks::Id>().name;
-      set(env, id, types::Label, id, emit_pc(out));
+      auto name = pop(in).as<toks::Id>().name;
+      cout << "label: " << name << endl;
+      set_label(env, name, emit_pc(out));
     });
 	
     set(env, "_", types::Nil, nullptr);
