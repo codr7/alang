@@ -38,7 +38,6 @@ namespace alang {
     
     set_macro(env, "label", [](Parser& in, Thread &out, Env& env) {
       auto name = pop(in).as<toks::Id>().name;
-      cout << "label: " << name << endl;
       set_label(env, name, emit_pc(out));
     });
 	
