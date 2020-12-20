@@ -19,3 +19,22 @@ Empty eval clears stack and Ctrl+D exits.
   
 [42 42]
 ```
+
+### conditions
+`if` may be used to branch on a condition, all values have boolean representations.
+
+```
+: if 0 _ T
+ 
+[T]
+: if 42 T _
+
+[T T]
+: if [] _ T
+ 
+[T T T]
+: if [42] T _
+ 
+[T T T T]
+```
+

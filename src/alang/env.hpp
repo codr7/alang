@@ -56,6 +56,9 @@ namespace alang {
       auto name = pop(in).as<toks::Id>().name;
       set_label(env, name, emit_pc(out));
     });
+
+    set(env, "T", types::Bool, true);
+    set(env, "F", types::Bool, false);
   }
 }
 
