@@ -21,20 +21,20 @@ Empty eval clears stack and Ctrl+D exits.
 ```
 
 ### conditions
-`if` may be used to branch on a condition, all values have boolean representations.
+`if` may be used to branch on a condition, any value may be used.
 
 ```
-: if 0 _ T
+: if 0 _ F
  
-[T]
+[F]
 : if 42 T _
 
-[T T]
-: if [] _ T
+[F T]
+: if [] _ F
  
-[T T T]
+[F T F]
 : if [42] T _
  
-[T T T T]
+[F T F T]
 ```
 
