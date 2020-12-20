@@ -10,21 +10,23 @@ namespace alang {
   using namespace std;
   using namespace lgpp;
 
-  inline Env& set_label(Env&  env, string id, PC pc) { return set(env, id, types::Label, id, pc); }
+  inline void set_label(Env&  env, string id, PC pc) { set(env, id, types::Label, id, pc); }
 
-  inline Env& set_macro(Env&  env, string id, Macro::Imp imp) { return set(env, id, types::Macro, id, imp); }
+  inline void set_macro(Env&  env, string id, Macro::Imp imp) { set(env, id, types::Macro, id, imp); }
+
+  inline void set_meta(Env&  env, Trait& type) { set(env, type.name, types::Meta, &type); }
 
   inline void init(lgpp::Env& env) {
-    set(env, "Coro", types::Meta, &types::Coro);
-    set(env, "Int", types::Meta, &types::Int);
-    set(env, "Nil", types::Meta, &types::Nil);
-    set(env, "Macro", types::Meta, &types::Macro);
-    set(env, "Meta", types::Meta, &types::Meta);
-    set(env, "Num", types::Meta, &types::Num);
-    set(env, "Pair", types::Meta, &types::Pair);
-    set(env, "Seq", types::Meta, &types::Seq);
-    set(env, "Stack", types::Meta, &types::Stack);
-    set(env, "Thread", types::Meta, &types::Thread);
+    set_meta(env, types::Coro);
+    set_meta(env, types::Int);
+    set_meta(env, types::Nil);
+    set_meta(env, types::Macro);
+    set_meta(env, types::Meta);
+    set_meta(env, types::Num);
+    set_meta(env, types::Pair);
+    set_meta(env, types::Seq);
+    set_meta(env, types::Stack);
+    set_meta(env, types::Thread);
 
     set_macro(env, "go", [](Parser& in, Thread &out, Env& env) {
       auto idt = pop(in);
