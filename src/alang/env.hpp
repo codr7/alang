@@ -2,6 +2,7 @@
 #define ALANG_ENV_HPP
 
 #include <lgpp/env.hpp>
+#include <lgpp/ops/branch.hpp>
 #include <lgpp/ops/go.hpp>
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
@@ -28,6 +29,8 @@ namespace alang {
     set_meta(env, types::Stack);
     set_meta(env, types::Thread);
 
+    set_macro(env, "_", [](Parser& in, Thread &out, Env& env) {});
+
     set_macro(env, "go", [](Parser& in, Thread &out, Env& env) {
       auto idt = pop(in);
       auto id = idt.as<toks::Id>().name;
@@ -36,12 +39,23 @@ namespace alang {
       emit<ops::Go>(out, target->as(types::Label));
     });
     
+    set_macro(env, "if", [](Parser& in, Thread &out, Env& env) {
+      Tok cond = pop(in), x = pop(in), y = pop(in);
+      compile(cond, in, out, env);
+      Label &xskip = push_label(out);
+      emit<ops::Branch>(out, xskip);
+      compile(x, in, out, env);
+      Label &yskip = push_label(out);
+      emit<ops::Go>(out, yskip);
+      xskip.pc = emit_pc(out);
+      compile(y, in, out, env);
+      yskip.pc = emit_pc(out);
+    });
+
     set_macro(env, "label", [](Parser& in, Thread &out, Env& env) {
       auto name = pop(in).as<toks::Id>().name;
       set_label(env, name, emit_pc(out));
     });
-	
-    set(env, "_", types::Nil, nullptr);
   }
 }
 
