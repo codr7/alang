@@ -1,7 +1,7 @@
 This project aims to implement a minimal viable programming language on top of [liblgpp](https://github.com/codr7/liblgpp).
 
 ```
-Alang v0.1
+Alang v0.2
 
 Press Return on empty line to eval.
 Empty eval clears stack and Ctrl+D exits.

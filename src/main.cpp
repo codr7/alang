@@ -13,7 +13,7 @@ int main() {
   using namespace lgpp;
   
   cout <<
-    "Alang v0.1" << endl << endl <<
+    "Alang v0.2" << endl << endl <<
     "Press Return on empty line to eval." << endl <<
     "Empty eval clears stack and Ctrl+D exits." << endl << endl <<
     ": ";

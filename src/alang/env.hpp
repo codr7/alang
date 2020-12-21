@@ -17,6 +17,8 @@ namespace alang {
 
   inline void set_meta(Env&  env, Trait& type) { set(env, type.name, types::Meta, &type); }
 
+  inline void set_prim(Env&  env, string id, Prim::Imp imp) { set(env, id, types::Prim, id, imp); }
+
   inline void init(lgpp::Env& env) {
     set_meta(env, types::Coro);
     set_meta(env, types::Int);
@@ -57,6 +59,25 @@ namespace alang {
       set_label(env, name, emit_pc(out));
     });
 
+    set_prim(env, "=", [](Thread& thread, Pos pos) {
+      auto& s = get_stack(thread);
+      auto r = pop(s);
+      push(s, types::Bool, pop(s) == r);
+    });
+
+    set_prim(env, "<", [](Thread& thread, Pos pos) {
+      auto& s = get_stack(thread);
+      auto r = pop(s);
+      push(s, types::Bool, pop(s) < r);
+    });
+
+    set_prim(env, ">", [](Thread& thread, Pos pos) {
+      auto& s = get_stack(thread);
+      auto r = pop(s);
+      push(s, types::Bool, pop(s) > r);
+    });
+
+    set(env, "N/A", types::Nil, nullptr);
     set(env, "T", types::Bool, true);
     set(env, "F", types::Bool, false);
   }
