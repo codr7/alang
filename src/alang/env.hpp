@@ -11,7 +11,7 @@ namespace alang {
   using namespace std;
   using namespace lgpp;
 
-  inline void set_label(Env&  env, string id, PC pc) { set(env, id, types::Label, id, pc); }
+  inline void set_label(Env&  env, Label& label) { set(env, label.name, types::Label, &label); }
 
   inline void set_macro(Env&  env, string id, Macro::Imp imp) { set(env, id, types::Macro, id, imp); }
 
@@ -38,7 +38,7 @@ namespace alang {
       auto id = idt.as<toks::Id>().name;
       auto target = find(env, id);
       if (!target) { throw EParse(idt.pos, "Unknown label: ", id); }
-      emit<ops::Go>(out, target->as(types::Label));
+      emit<ops::Go>(out, *target->as(types::Label));
     });
     
     set_macro(env, "if", [](Parser& in, Thread &out, Env& env) {
@@ -56,7 +56,7 @@ namespace alang {
 
     set_macro(env, "label", [](Parser& in, Thread &out, Env& env) {
       auto name = pop(in).as<toks::Id>().name;
-      set_label(env, name, emit_pc(out));
+      set_label(env, push_label(out, name, emit_pc(out)));
     });
 
     set_prim(env, "=", [](Thread& thread, Pos pos) {
@@ -77,7 +77,6 @@ namespace alang {
       push(s, types::Bool, pop(s) > r);
     });
 
-    set(env, "N/A", types::Nil, nullptr);
     set(env, "T", types::Bool, true);
     set(env, "F", types::Bool, false);
   }
