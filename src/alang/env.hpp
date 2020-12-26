@@ -4,6 +4,7 @@
 #include <lgpp/env.hpp>
 #include <lgpp/ops/branch.hpp>
 #include <lgpp/ops/go.hpp>
+#include <lgpp/ops/isa.hpp>
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
 
@@ -54,6 +55,12 @@ namespace alang {
       yskip.pc = emit_pc(out);
     });
 
+    set_macro(env, ".isa", [](Parser& in, Thread &out, Env& env) {
+      auto parent = pop(in);
+      compile(parent, in, out, env);
+      emit<ops::Isa>(out);
+    });
+
     set_macro(env, "label", [](Parser& in, Thread &out, Env& env) {
       auto name = pop(in).as<toks::Id>().name;
       set_label(env, push_label(out, name, emit_pc(out)));
@@ -77,6 +84,7 @@ namespace alang {
       push(s, types::Bool, pop(s) > r);
     });
 
+    set(env, "NA", types::Nil, nullptr);
     set(env, "T", types::Bool, true);
     set(env, "F", types::Bool, false);
   }

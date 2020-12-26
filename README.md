@@ -38,3 +38,17 @@ Empty eval clears stack and Ctrl+D exits.
 [F T F T]
 ```
 
+### types
+Types are first class.
+`.isa` returns the most specific common parent type, or `NA` if none exists.
+
+```
+: Int .isa Stack
+
+[NA]
+:
+[]
+: Int .isa Num
+
+[Num]
+```
