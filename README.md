@@ -20,6 +20,21 @@ Empty eval clears stack and Ctrl+D exits.
 [42 42]
 ```
 
+### stacks
+The main stack may be manipulated directly.
+
+```
+: 1 2 3
+[1 2 3]
+
+: cp
+[1 2 3 3]
+
+: d d
+[1 2]
+```
+
+
 ### conditions
 `if` may be used to branch on a condition, any value may be used.
 
@@ -40,15 +55,15 @@ Empty eval clears stack and Ctrl+D exits.
 
 ### types
 Types are first class.
-`.isa` returns the most specific common parent type, or `NA` if none exists.
+`.isa` returns `T` if the first argument is derived from the second, `F` otherwise.
 
 ```
 : Int .isa Stack
 
-[NA]
+[F]
 :
 []
 : Int .isa Num
 
-[Num]
+[T]
 ```
