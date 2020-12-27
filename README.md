@@ -6,18 +6,9 @@ Alang v0.2
 Press Return on empty line to eval.
 Empty eval clears stack and Ctrl+D exits.
 
-: label foo
-  42
+: 42
   
 [42]
-: 
-[]
-: go foo
-  
-[42]
-: go foo
-  
-[42 42]
 ```
 
 ### stacks
@@ -33,7 +24,6 @@ The main stack may be manipulated directly.
 : d d
 [1 2]
 ```
-
 
 ### conditions
 `if` may be used to branch on a condition, any value may be used.
@@ -61,9 +51,25 @@ Types are first class.
 : Int .isa Stack
 
 [F]
-:
-[]
 : Int .isa Num
 
-[T]
+[F T]
+```
+
+### calls
+Labels may be called by appending an argument list to their names, unspecified arguments are taken from the stack.
+
+```
+: label foo 42
+ 
+[42]
+: 
+[]
+: 1 2
+ 
+[1 2]
+: foo(3 _ _ 4)
+ 
+mv 2
+[3 1 2 4 42]
 ```
