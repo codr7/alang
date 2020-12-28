@@ -16,13 +16,17 @@ The main stack may be manipulated directly.
 
 ```
 : 1 2 3
+
 [1 2 3]
-
 : cp
-[1 2 3 3]
 
-: d d
-[1 2]
+[1 2 3 3]
+: rot
+
+[1 3 3 2]
+: d
+
+[1 3 3]
 ```
 
 ### conditions

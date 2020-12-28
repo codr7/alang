@@ -4,7 +4,7 @@
 #include <lgpp/ops/call.hpp>
 #include <lgpp/ops/push_stack.hpp>
 #include <lgpp/ops/pop_stack.hpp>
-#include <lgpp/ops/mv.hpp>
+#include <lgpp/ops/rot.hpp>
 #include <lgpp/toks.hpp>
 
 namespace alang::toks {
@@ -42,8 +42,7 @@ namespace lgpp::toks {
       } else {
 	if (skip) {
 	  if (j != -1) {
-	    cout << "mv " << i - j << endl;
-	    emit<ops::Mv>(out, i - j, i - j);
+	    emit<ops::Rot>(out, i - j, i - j);
 	  }
 
 	  skip = false;

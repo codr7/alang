@@ -7,6 +7,7 @@
 #include <lgpp/ops/drop.hpp>
 #include <lgpp/ops/go.hpp>
 #include <lgpp/ops/isa.hpp>
+#include <lgpp/ops/rot.hpp>
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
 
@@ -70,6 +71,8 @@ namespace alang {
       auto name = pop(in).as<toks::Id>().name;
       set_label(env, push_label(out, name, emit_pc(out)));
     });
+
+    set_macro(env, "rot", [](Parser& in, Thread &out, Env& env) { emit<ops::Rot>(out); });
 
     set_prim(env, "=", [](Thread& thread, Pos pos) {
       auto& s = get_stack(thread);
