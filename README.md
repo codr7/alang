@@ -1,6 +1,16 @@
 This project aims to implement a minimal viable programming language on top of [liblgpp](https://github.com/codr7/liblgpp).
 
+### setup
+The project requires a C++17 compiler, CMake and [liblgpp](https://github.com/codr7/liblgpp) to build.
+
 ```
+$ git clone https://github.com/codr7/alang.git
+$ cd alang
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ./alang
 Alang v0.2
 
 Press Return on empty line to eval.
@@ -11,8 +21,9 @@ Empty eval clears stack and Ctrl+D exits.
 [42]
 ```
 
+
 ### stacks
-The main stack may be manipulated directly.
+The stack may be manipulated directly.
 
 ```
 : 1 2 3
