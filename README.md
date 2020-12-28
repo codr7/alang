@@ -21,7 +21,6 @@ Empty eval clears stack and Ctrl+D exits.
 [42]
 ```
 
-
 ### stacks
 The stack may be manipulated directly.
 
@@ -85,6 +84,5 @@ Labels may be called by appending an argument list to their names, unspecified a
 [1 2]
 : foo(3 _ _ 4)
  
-mv 2
 [3 1 2 4 42]
 ```
