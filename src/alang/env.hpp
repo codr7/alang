@@ -56,8 +56,8 @@ namespace alang {
     });
 
     set_macro(env, "isa", [](Toque& in, Thread &out, Env& env) {
-      auto parent = pop(in);
-      compile(parent, in, out, env);
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
       emit<ops::Isa>(out);
     });
 

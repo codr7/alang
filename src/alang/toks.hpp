@@ -75,8 +75,8 @@ namespace lgpp::toks {
 
   template <>
   inline void compile(const Tok& tok, const alang::toks::DotId& imp, Toque& in, Thread& out, Env& env) {    
+    in.emplace_back(tok.pos, Id("_"));
     lgpp::toks::compile<Id>(tok, imp, in, out, env);
-    push<Id>(in, tok.pos, "_");
   }
 
   template <>
