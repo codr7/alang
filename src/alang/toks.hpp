@@ -18,6 +18,10 @@ namespace alang::toks {
     vector<Tok> args;
   };
 
+  struct DotId: lgpp::toks::Id {
+    DotId(string name): Id(name) {}
+  };
+    
   struct Stack: lgpp::toks::Group {
     template <typename...Args>
     Stack(Args&&...args): Group(forward<Args>(args)...) {}
@@ -67,6 +71,18 @@ namespace lgpp::toks {
     }
       
     out << ')';
+  }
+
+  template <>
+  inline void compile(const Tok& tok, const alang::toks::DotId& imp, Toque& in, Thread& out, Env& env) {    
+    lgpp::toks::compile<Id>(tok, imp, in, out, env);
+    push<Id>(in, tok.pos, "_");
+  }
+
+  template <>
+  inline void dump(const Tok &tok, const alang::toks::DotId &imp, ostream &out) {
+    out << '.';
+    lgpp::toks::dump<Id>(tok, imp, out);
   }
 
   template <>

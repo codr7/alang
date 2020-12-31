@@ -55,7 +55,7 @@ namespace alang {
       yskip.pc = emit_pc(out);
     });
 
-    set_macro(env, ".isa", [](Toque& in, Thread &out, Env& env) {
+    set_macro(env, "isa", [](Toque& in, Thread &out, Env& env) {
       auto parent = pop(in);
       compile(parent, in, out, env);
       emit<ops::Isa>(out);

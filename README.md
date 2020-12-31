@@ -59,7 +59,7 @@ The stack may be manipulated directly.
 
 ### types
 Types are first class.
-`.isa` returns `T` if the first argument is derived from the second, `F` otherwise.
+`isa` returns `T` if the first argument is derived from the second, `F` otherwise.
 
 ```
 : Int .isa Stack
