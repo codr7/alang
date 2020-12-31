@@ -11,7 +11,7 @@ $ cd build
 $ cmake ..
 $ make
 $ ./alang
-Alang v0.2
+Alang v0.3
 
 Press Return on empty line to eval.
 Empty eval clears stack and Ctrl+D exits.

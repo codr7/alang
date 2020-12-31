@@ -7,8 +7,8 @@
 namespace alang {
   using namespace std;
 
-  inline size_t parse_id(Parser& parser, char c, istream& in) {
-    if (!lgpp::parse_id_pred(parser, c, in, [](auto c) { return c != '('; })) { return 0; }
+  inline bool parse_id(Parser& parser, char c, istream& in) {
+    if (!lgpp::parse_id_pred(parser, c, in, [](auto c) { return c != '('; })) { return false; }
 
     if (in.get(c)) {
       if (c == '(') {
@@ -21,7 +21,7 @@ namespace alang {
       }
     }
 
-    return 1;
+    return true;
   }
 
   inline void init(lgpp::Parser &parser) {
