@@ -13,7 +13,7 @@ namespace alang {
     if (in.get(c)) {
       if (c == '(') {
 	if (parse_group('(', ')')(parser, c, in)) {
-	  Tok id = pop(parser), args = pop(parser);
+	  Tok args = pop_back(parser), id = pop_back(parser);
 	  push<toks::Call>(parser, id.pos, id.as<lgpp::toks::Id>().name, args.as<lgpp::toks::Group>().toks);
 	}
       } else {
@@ -27,7 +27,7 @@ namespace alang {
   inline void init(lgpp::Parser &parser) {
     parser.alts.push_back(parse_int);
     parser.alts.push_back(parse_group('(', ')'));
-    //parser.alts.push_back(parse_group<lgpp::toks::Stack>('[', ']'));
+    parser.alts.push_back(parse_group<toks::Stack>('[', ']'));
     parser.alts.push_back(parse_id);
   }
 }

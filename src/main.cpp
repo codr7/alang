@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <lgpp/env.hpp>
 #include <lgpp/ops/stop.hpp>
 #include <lgpp/repl.hpp>
@@ -13,13 +15,14 @@ int main() {
   using namespace lgpp;
   
   cout <<
-    "Alang v0.2" << endl << endl <<
+    "Alang v0.3" << endl << endl <<
     "Press Return on empty line to eval." << endl <<
     "Empty eval clears stack and Ctrl+D exits." << endl << endl <<
     ": ";
   
   VM vm;
-
+  bool debug = false;
+  
   Parser p("repl");
   init(p);
 
@@ -29,7 +32,7 @@ int main() {
   stringstream buf;
   REPL repl(cin, cout);
   
-  repl.on_getline = [&vm, &p, &env, &buf](auto &line) {
+  repl.on_getline = [&vm, &debug, &p, &env, &buf](auto &line) {
     if (line.empty()) {
       try {
 	if (buf.tellp()) {
@@ -46,7 +49,10 @@ int main() {
 	} else {
 	  get_stack(vm).clear();
 	}
-      } catch (exception& e) { cout << e.what() << endl; }
+      } catch (exception& e) {
+	if (debug) { throw; }
+	cout << "Error: " << e.what() << endl;
+      }
       
       cout << get_stack(vm) << endl << ": ";
     } else {

@@ -27,7 +27,7 @@ namespace alang::toks {
 namespace lgpp::toks {
   
   template <>
-  inline void compile(const Tok& tok, const alang::toks::Call& imp, Parser& in, Thread& out, Env& env) {
+  inline void compile(const Tok& tok, const alang::toks::Call& imp, Toque& in, Thread& out, Env& env) {
     auto found = find(env, imp.target);
     if (!found) { throw ECompile(tok.pos, "Unknown identifier: ", imp.target); }
     int i = 0, j = -1;
@@ -70,7 +70,7 @@ namespace lgpp::toks {
   }
 
   template <>
-  inline void compile(const Tok& tok, const alang::toks::Stack& imp, Parser& in, Thread& out, Env& env) {
+  inline void compile(const Tok& tok, const alang::toks::Stack& imp, Toque& in, Thread& out, Env& env) {
     emit<ops::PushStack>(out);
     compile<Group>(tok, imp, in, out, env);
     emit<ops::PopStack>(out);

@@ -70,19 +70,29 @@ Types are first class.
 [F T]
 ```
 
-### calls
-Labels may be called by appending an argument list to their names, unspecified arguments are taken from the stack.
+### bindings
+Bindings are evaluated at compile time, which is why the following example complains about a missing value.
 
 ```
-: label foo 42
+: 42 let foo _
+
+Error: Stack is empty
+[]
+```
+
+### subroutines
+Subroutines are first class, may be defined using `sub` and called by suffixing their names with an argument list.
+
+```
+: let foo (sub (return 42))
+
+[]
+
+: foo
+
+[(Label 0x7fa911d04530)]
+
+: d foo()
  
 [42]
-: 
-[]
-: 1 2
- 
-[1 2]
-: foo(3 _ _ 4)
- 
-[3 1 2 4 42]
 ```
