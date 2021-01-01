@@ -35,8 +35,9 @@ int main() {
     if (line.empty()) {
       try {
 	if (buf.tellp()) {
-	  parse(p, buf.str());
+	  string in = buf.str();
 	  stringstream().swap(buf);
+	  parse(p, in);
 	  Thread& t = get_thread(vm);
 	  PC start_pc = emit_pc(t);
 	  compile(p, t, env);
@@ -48,7 +49,7 @@ int main() {
 	} else {
 	  get_stack(vm).clear();
 	}
-      } catch (exception& e) {
+      } catch (exception& e) {	
 	if (debug) { throw; }
 	cout << "Error: " << e.what() << endl;
       }

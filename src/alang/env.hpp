@@ -54,7 +54,12 @@ namespace alang {
       emit<ops::Add>(out);
     });
     
-    let_macro(env, "-", [](Toque& in, Thread &out, Env& env) { emit<ops::Sub>(out); });
+    let_macro(env, "-", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::Sub>(out);
+    });
+    
     let_macro(env, "cp", [](Toque& in, Thread &out, Env& env) { emit<ops::Cp>(out); });
     let_macro(env, "d", [](Toque& in, Thread &out, Env& env) { emit<ops::Drop>(out); });
 
@@ -87,11 +92,6 @@ namespace alang {
       skip.pc = emit_pc(out);
       eval(out, start_pc);
       let(env, key, pop(get_stack(out)));
-    });
-
-    let_macro(env, "return", [](Toque& in, Thread &out, Env& env) {
-      compile(pop(in), in, out, env);
-      emit<ops::Return>(out);
     });
 
     let_macro(env, "rot", [](Toque& in, Thread &out, Env& env) { emit<ops::Rot>(out); });
