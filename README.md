@@ -28,15 +28,26 @@ The stack may be manipulated directly.
 : 1 2 3
 
 [1 2 3]
+: sw
+
+[1 3 2]
 : cp
 
-[1 2 3 3]
+[1 3 2 2]
 : rot
 
-[1 3 3 2]
+[1 2 2 3]
 : d
 
-[1 3 3]
+[1 2 2]
+```
+
+Additional stacks may be created by enclosing any expresssion in brackets.
+
+```
+: [1 2 .+ 3]
+
+[[1 5]]
 ```
 
 ### conditions

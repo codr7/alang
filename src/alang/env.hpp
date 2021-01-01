@@ -2,6 +2,7 @@
 #define ALANG_ENV_HPP
 
 #include <lgpp/env.hpp>
+#include <lgpp/ops/add.hpp>
 #include <lgpp/ops/branch.hpp>
 #include <lgpp/ops/cp.hpp>
 #include <lgpp/ops/drop.hpp>
@@ -9,7 +10,9 @@
 #include <lgpp/ops/isa.hpp>
 #include <lgpp/ops/return.hpp>
 #include <lgpp/ops/rot.hpp>
+#include <lgpp/ops/sub.hpp>
 #include <lgpp/ops/type_of.hpp>
+#include <lgpp/ops/swap.hpp>
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
 
@@ -44,6 +47,14 @@ namespace alang {
     let_meta(env, vm.Thread);
 
     let_macro(env, "_", [](Toque& in, Thread &out, Env& env) {});
+
+    let_macro(env, "+", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::Add>(out);
+    });
+    
+    let_macro(env, "-", [](Toque& in, Thread &out, Env& env) { emit<ops::Sub>(out); });
     let_macro(env, "cp", [](Toque& in, Thread &out, Env& env) { emit<ops::Cp>(out); });
     let_macro(env, "d", [](Toque& in, Thread &out, Env& env) { emit<ops::Drop>(out); });
 
@@ -94,6 +105,8 @@ namespace alang {
       skip.pc = emit_pc(out);
       emit<ops::Push>(out, vm.Sub, &sub);
     });
+
+    let_macro(env, "sw", [](Toque& in, Thread &out, Env& env) { emit<ops::Swap>(out); });
 
     let_macro(env, "type", [](Toque& in, Thread &out, Env& env) {
       compile(pop(in), in, out, env);
