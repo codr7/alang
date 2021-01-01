@@ -4,15 +4,14 @@
 #include <lgpp/ops/stop.hpp>
 #include <lgpp/repl.hpp>
 #include <lgpp/stack.hpp>
-#include <lgpp/vm.hpp>
 
 #include "alang/env.hpp"
 #include "alang/parser.hpp"
 #include "alang/toks.hpp"
+#include "alang/vm.hpp"
 
 int main() {
   using namespace alang;
-  using namespace lgpp;
   
   cout <<
     "Alang v0.3" << endl << endl <<
@@ -20,13 +19,13 @@ int main() {
     "Empty eval clears stack and Ctrl+D exits." << endl << endl <<
     ": ";
   
-  VM vm;
+  alang::VM vm;
   bool debug = false;
   
-  Parser p("repl");
+  Parser p(vm, "repl");
   init(p);
 
-  Env env;
+  Env env(vm);
   init(env);
   
   stringstream buf;

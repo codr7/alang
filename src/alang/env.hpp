@@ -12,104 +12,108 @@
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
 
+#include "alang/vm.hpp"
+
 namespace alang {
   using namespace std;
   using namespace lgpp;
 
-  inline void set_label(Env&  env, Label& label) { set(env, *label.name, types::Label, &label); }
+  inline void let_label(Env&  env, Label& label) { let(env, *label.name, env.vm.Label, &label); }
 
-  inline void set_macro(Env&  env, string id, Macro::Imp imp) { set(env, id, types::Macro, id, imp); }
+  inline void let_macro(Env&  env, string id, Macro::Imp imp) { let(env, id, env.vm.Macro, id, imp); }
 
-  inline void set_meta(Env&  env, Trait& type) { set(env, type.name, types::Meta, &type); }
+  inline void let_meta(Env&  env, Trait& type) { let(env, type.name, env.vm.Meta, &type); }
 
-  inline void set_prim(Env&  env, string id, Prim::Imp imp) { set(env, id, types::Prim, id, imp); }
+  inline void let_prim(Env&  env, string id, Prim::Imp imp) { let(env, id, env.vm.Prim, id, imp); }
 
   inline void init(lgpp::Env& env) {
-    set_meta(env, types::Any);
-    set_meta(env, types::Coro);
-    set_meta(env, types::Int);
-    set_meta(env, types::Macro);
-    set_meta(env, types::Meta);
-    set_meta(env, types::Num);
-    set_meta(env, types::Pair);
-    set_meta(env, types::Prim);
-    set_meta(env, types::Seq);
-    set_meta(env, types::Stack);
-    set_meta(env, types::Thread);
+    auto &vm = dynamic_cast<alang::VM&>(env.vm);
+    
+    let_meta(env, vm.Any);
+    let_meta(env, vm.Coro);
+    let_meta(env, vm.Int);
+    let_meta(env, vm.Macro);
+    let_meta(env, vm.Meta);
+    let_meta(env, vm.Num);
+    let_meta(env, vm.Pair);
+    let_meta(env, vm.Prim);
+    let_meta(env, vm.Seq);
+    let_meta(env, vm.Stack);
+    let_meta(env, vm.Sub);
+    let_meta(env, vm.Thread);
 
-    set_macro(env, "_", [](Toque& in, Thread &out, Env& env) {});
-    set_macro(env, "cp", [](Toque& in, Thread &out, Env& env) { emit<ops::Cp>(out); });
+    let_macro(env, "_", [](Toque& in, Thread &out, Env& env) {});
+    let_macro(env, "cp", [](Toque& in, Thread &out, Env& env) { emit<ops::Cp>(out); });
+    let_macro(env, "d", [](Toque& in, Thread &out, Env& env) { emit<ops::Drop>(out); });
 
-    set_macro(env, "d", [](Toque& in, Thread &out, Env& env) { emit<ops::Drop>(out); });
-
-    set_macro(env, "if", [](Toque& in, Thread &out, Env& env) {
+    let_macro(env, "if", [](Toque& in, Thread &out, Env& env) {
       Tok cond = pop(in), x = pop(in), y = pop(in);
       compile(cond, in, out, env);
-      auto& xskip = push_label(out);
+      Label& xskip = push_label(out);
       emit<ops::Branch>(out, xskip);
       compile(x, in, out, env);
-      auto& yskip = push_label(out);
+      Label& yskip = push_label(out);
       emit<ops::Go>(out, yskip);
       xskip.pc = emit_pc(out);
       compile(y, in, out, env);
       yskip.pc = emit_pc(out);
     });
 
-    set_macro(env, "isa", [](Toque& in, Thread &out, Env& env) {
+    let_macro(env, "isa", [](Toque& in, Thread &out, Env& env) {
       compile(pop(in), in, out, env);
       compile(pop(in), in, out, env);
       emit<ops::Isa>(out);
     });
 
-    set_macro(env, "let", [](Toque& in, Thread &out, Env& env) {
-      auto key = pop(in).as<toks::Id>().name;
-      auto& skip = push_label(out);
+    let_macro(env, "let", [](Toque& in, Thread &out, Env& env) {
+      string key = pop(in).as<toks::Id>().name;
+      Label& skip = push_label(out);
       emit<ops::Go>(out, skip);
-      auto start_pc = emit_pc(out);
+      PC start_pc = emit_pc(out);
       compile(pop(in), in, out, env);      
       emit<ops::Stop>(out);
       skip.pc = emit_pc(out);
       eval(out, start_pc);
-      set(env, key, pop(get_stack(out)));
+      let(env, key, pop(get_stack(out)));
     });
 
-    set_macro(env, "return", [](Toque& in, Thread &out, Env& env) {
+    let_macro(env, "return", [](Toque& in, Thread &out, Env& env) {
       compile(pop(in), in, out, env);
       emit<ops::Return>(out);
     });
 
-    set_macro(env, "rot", [](Toque& in, Thread &out, Env& env) { emit<ops::Rot>(out); });
+    let_macro(env, "rot", [](Toque& in, Thread &out, Env& env) { emit<ops::Rot>(out); });
 
-    set_macro(env, "sub", [](Toque& in, Thread &out, Env& env) {
-      auto& skip = push_label(out);
+    let_macro(env, "sub", [&vm](Toque& in, Thread &out, Env& env) {
+      Label& skip = push_label(out);
       emit<ops::Go>(out, skip);
-      auto &label = push_label(out, nullopt, emit_pc(out));
+      Label& sub = push_label(out, nullopt, emit_pc(out));
       compile(pop(in), in, out, env);
       emit<ops::Stop>(out);
       skip.pc = emit_pc(out);
-      emit<ops::Push>(out, types::Label, &label);
+      emit<ops::Push>(out, vm.Sub, &sub);
     });
 
-    set_prim(env, "=", [](Thread& thread, Pos pos) {
-      auto& s = get_stack(thread);
-      auto r = pop(s);
-      push(s, types::Bool, pop(s) == r);
+    let_prim(env, "=", [&vm](Thread& thread, Pos pos) {
+      Stack& s = get_stack(thread);
+      Val r = pop(s);
+      push(s, vm.Bool, pop(s) == r);
     });
 
-    set_prim(env, "<", [](Thread& thread, Pos pos) {
-      auto& s = get_stack(thread);
-      auto r = pop(s);
-      push(s, types::Bool, pop(s) < r);
+    let_prim(env, "<", [&vm](Thread& thread, Pos pos) {
+      Stack& s = get_stack(thread);
+      Val r = pop(s);
+      push(s, vm.Bool, pop(s) < r);
     });
 
-    set_prim(env, ">", [](Thread& thread, Pos pos) {
-      auto& s = get_stack(thread);
-      auto r = pop(s);
-      push(s, types::Bool, pop(s) > r);
+    let_prim(env, ">", [&vm](Thread& thread, Pos pos) {
+      Stack& s = get_stack(thread);
+      Val r = pop(s);
+      push(s, vm.Bool, pop(s) > r);
     });
 
-    set(env, "T", types::Bool, true);
-    set(env, "F", types::Bool, false);
+    let(env, "T", vm.Bool, true);
+    let(env, "F", vm.Bool, false);
   }
 }
 

@@ -71,7 +71,7 @@ Types are first class.
 ```
 
 ### bindings
-Bindings are evaluated at compile time, which is why the following example complains about a missing value.
+Bindings may be created using `let` and are evaluated at compile time, which is why the following example complains about a missing value.
 
 ```
 : 42 let foo _
@@ -90,7 +90,7 @@ Subroutines are first class, may be defined using `sub` and called by suffixing 
 
 : foo
 
-[(Label 0x7fa911d04530)]
+[(Sub 0x7fa911d04530)]
 
 : d foo()
  
