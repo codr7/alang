@@ -98,13 +98,36 @@ Types are first class.
 ```
 
 ### bindings
-Bindings may be created using `let` and are evaluated at compile time, which is why the following example complains about a missing value.
+Bindings may be created using `let`.
+
+
+```
+: let foo 42
+
+[]
+: foo
+
+[42]
+```
+
+Bindings are evaluated at compile time.
 
 ```
 : 42 let foo _
 
 Error: Stack is empty
 []
+```
+
+`@` may be used to evaluate any expression at compile time.
+
+```
+: @42 let foo _
+
+[]
+: foo
+
+[42]
 ```
 
 ### subroutines

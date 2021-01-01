@@ -18,6 +18,11 @@ namespace alang::toks {
     vector<Tok> args;
   };
 
+  struct CTE {
+    CTE(Tok expr): expr(expr) {}
+    Tok expr;
+  };
+
   struct DotId: lgpp::toks::Id {
     DotId(string name): Id(name) {}
   };
@@ -80,6 +85,24 @@ namespace lgpp::toks {
     out << ')';
   }
 
+  template <>
+  inline void compile(const Tok& tok, const alang::toks::CTE& imp, Toque& in, Thread& out, Env& env) {
+    Label& skip = push_label(out);
+    emit<ops::Go>(out, skip);
+    PC start_pc = emit_pc(out);
+    Toque ein;
+    compile(imp.expr, ein, out, env);      
+    emit<ops::Stop>(out);
+    skip.pc = emit_pc(out);
+    eval(out, start_pc);
+  }
+
+  template <>
+  inline void dump(const Tok &tok, const alang::toks::CTE &imp, ostream &out) {
+    out << '@';
+    dump(imp.expr, out);
+  }
+  
   template <>
   inline void compile(const Tok& tok, const alang::toks::DotId& imp, Toque& in, Thread& out, Env& env) {    
     in.emplace_back(tok.pos, Id("_"));
