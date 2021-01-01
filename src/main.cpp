@@ -7,7 +7,6 @@
 
 #include "alang/env.hpp"
 #include "alang/parser.hpp"
-#include "alang/toks.hpp"
 #include "alang/vm.hpp"
 
 int main() {

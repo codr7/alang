@@ -2,7 +2,13 @@
 #define ALANG_PARSER_HPP
 
 #include <lgpp/parser.hpp>
-#include "alang/toks.hpp"
+#include <lgpp/toks/group.hpp>
+#include <lgpp/toks/id.hpp>
+
+#include "alang/toks/cte.hpp"
+#include "alang/toks/call.hpp"
+#include "alang/toks/dot_id.hpp"
+#include "alang/toks/stack.hpp"
 
 namespace alang {
   using namespace std;
