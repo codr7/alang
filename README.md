@@ -59,6 +59,22 @@ The stack may be manipulated directly.
 
 ### types
 Types are first class.
+
+`type` may be used to get the type of any value.
+
+```
+: 42 .type
+
+[Int]
+: .type
+
+[Meta]
+
+: .type
+
+[Meta]
+```
+
 `isa` returns `T` if the first argument is derived from the second, `F` otherwise.
 
 ```

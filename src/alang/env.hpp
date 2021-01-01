@@ -9,6 +9,7 @@
 #include <lgpp/ops/isa.hpp>
 #include <lgpp/ops/return.hpp>
 #include <lgpp/ops/rot.hpp>
+#include <lgpp/ops/type_of.hpp>
 #include <lgpp/parser.hpp>
 #include <lgpp/types.hpp>
 
@@ -92,6 +93,11 @@ namespace alang {
       emit<ops::Stop>(out);
       skip.pc = emit_pc(out);
       emit<ops::Push>(out, vm.Sub, &sub);
+    });
+
+    let_macro(env, "type", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      emit<ops::TypeOf>(out);
     });
 
     let_prim(env, "=", [&vm](Thread& thread, Pos pos) {
