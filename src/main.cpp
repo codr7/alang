@@ -37,8 +37,8 @@ int main() {
 	if (buf.tellp()) {
 	  parse(p, buf.str());
 	  stringstream().swap(buf);
-	  auto &t = get_thread(vm);
-	  auto start_pc = emit_pc(t);
+	  Thread& t = get_thread(vm);
+	  PC start_pc = emit_pc(t);
 	  compile(p, t, env);
 	  
 	  if (emit_pc(t) > start_pc) {
