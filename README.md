@@ -163,7 +163,7 @@ Error: Stack is empty
 Subroutines are first class, may be defined using `sub` and called by suffixing their names with an argument list.
 
 ```
-: let foo sub(return 42)
+: let foo sub(42)
 
 []
 
