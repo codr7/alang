@@ -3,6 +3,7 @@
 
 #include <lgpp/env.hpp>
 #include <lgpp/ops/add.hpp>
+#include <lgpp/ops/and.hpp>
 #include <lgpp/ops/branch.hpp>
 #include <lgpp/ops/cp.hpp>
 #include <lgpp/ops/drop.hpp>
@@ -12,6 +13,7 @@
 #include <lgpp/ops/isa.hpp>
 #include <lgpp/ops/lt.hpp>
 #include <lgpp/ops/return.hpp>
+#include <lgpp/ops/or.hpp>
 #include <lgpp/ops/rot.hpp>
 #include <lgpp/ops/sub.hpp>
 #include <lgpp/ops/type_of.hpp>
@@ -80,7 +82,13 @@ namespace alang {
       compile(pop(in), in, out, env);
       emit<ops::Sub>(out);
     });
-    
+
+    let_macro(env, "and", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::And>(out);
+    });
+
     let_macro(env, "cp", [](Toque& in, Thread &out, Env& env) { emit<ops::Cp>(out); });
     let_macro(env, "d", [](Toque& in, Thread &out, Env& env) { emit<ops::Drop>(out); });
 
@@ -113,6 +121,12 @@ namespace alang {
       skip.pc = emit_pc(out);
       eval(out, start_pc);
       let(env, key, pop(get_stack(out)));
+    });
+
+    let_macro(env, "or", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::Or>(out);
     });
 
     let_macro(env, "rot", [](Toque& in, Thread &out, Env& env) { emit<ops::Rot>(out); });

@@ -64,6 +64,22 @@ Additional stacks may be created by enclosing any expresssion in brackets.
 [T F]
 ```
 
+`or` returns its first truthy argument, or the last argument if none.
+
+```
+: F .or 0 .or 42
+ 
+[42]
+```
+
+`and` returns its first falsey argument, or the last argument if none.
+
+```
+: T .and 0 .and 42
+ 
+[0]
+```
+
 `if` may be used to branch on any value.
 
 ```
