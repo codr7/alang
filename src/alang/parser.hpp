@@ -17,7 +17,7 @@ namespace alang {
     if (c != '@') { return false; }
     Pos p = parser.pos;
     if (!lgpp::parse_tok(parser, in)) { throw EParse(p, "Missing CTE expression"); }
-    push<toks::CTE>(parser, p, pop(parser));
+    push<toks::CTE>(parser, p, pop_back(parser));
     return true;
   }
 
@@ -26,7 +26,7 @@ namespace alang {
 
     Pos p = parser.pos;
     if (!lgpp::parse_tok(parser, in)) { throw EParse(p, "Missing dot target"); }
-    auto idt = pop(parser);
+    Tok idt = pop_back(parser);
     
     auto *id = idt.try_as<lgpp::toks::Id>();
     if (!id) { throw EParse(p, "Invalid dot target: ", idt); }
@@ -36,9 +36,9 @@ namespace alang {
   }
 
   inline bool parse_id(Parser& parser, char c, istream& in) {
-    auto p = parser.pos;
+    Pos p = parser.pos;
     if (!lgpp::parse_id_pred(parser, c, in, [](auto c) { return c != '('; })) { return false; }
-    auto id = pop_back(parser).as<lgpp::toks::Id>().name;
+    string id = pop_back(parser).as<lgpp::toks::Id>().name;
     
     if (in.get(c)) {
       if (c == '(') {
