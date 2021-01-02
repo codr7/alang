@@ -4,11 +4,13 @@
 #include <lgpp/vm.hpp>
 
 namespace alang {
+  
   struct VM: lgpp::VM {
     VM();
 
     lgpp::Type<lgpp::Label *> Sub;
   };
+  
 }
 
 #endif

@@ -113,6 +113,12 @@ namespace alang {
       emit<ops::TypeOf>(out);
     });
 
+    let_prim(env, "say", [](Thread& thread, Pos pos) {
+      Stack& s = get_stack(thread);
+      say(pop(s), cout);
+      cout << endl;
+    });
+
     let_prim(env, "=", [&vm](Thread& thread, Pos pos) {
       Stack& s = get_stack(thread);
       Val r = pop(s);

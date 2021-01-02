@@ -146,3 +146,13 @@ Subroutines are first class, may be defined using `sub` and called by suffixing 
  
 [42]
 ```
+
+### io
+`say` may be used to print any value to standard output.
+
+```
+: say(42)
+ 
+42
+[]
+```
