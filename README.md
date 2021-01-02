@@ -51,7 +51,20 @@ Additional stacks may be created by enclosing any expresssion in brackets.
 ```
 
 ### conditions
-`if` may be used to branch on a condition, any value may be used.
+
+`=`, `<` and `>` may be used to compare values.
+
+```
+: 42 .= 42
+
+[T]
+
+: 1 .> 2
+
+[T F]
+```
+
+`if` may be used to branch on any value.
 
 ```
 : if 0 _ F

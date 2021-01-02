@@ -6,8 +6,11 @@
 #include <lgpp/ops/branch.hpp>
 #include <lgpp/ops/cp.hpp>
 #include <lgpp/ops/drop.hpp>
+#include <lgpp/ops/eq.hpp>
 #include <lgpp/ops/go.hpp>
+#include <lgpp/ops/gt.hpp>
 #include <lgpp/ops/isa.hpp>
+#include <lgpp/ops/lt.hpp>
 #include <lgpp/ops/return.hpp>
 #include <lgpp/ops/rot.hpp>
 #include <lgpp/ops/sub.hpp>
@@ -47,6 +50,24 @@ namespace alang {
     let_meta(env, vm.Thread);
 
     let_macro(env, "_", [](Toque& in, Thread &out, Env& env) {});
+
+    let_macro(env, "=", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::Eq>(out);
+    });
+
+    let_macro(env, "<", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::Lt>(out);
+    });
+    
+    let_macro(env, ">", [](Toque& in, Thread &out, Env& env) {
+      compile(pop(in), in, out, env);
+      compile(pop(in), in, out, env);
+      emit<ops::Gt>(out);
+    });
 
     let_macro(env, "+", [](Toque& in, Thread &out, Env& env) {
       compile(pop(in), in, out, env);
@@ -117,24 +138,6 @@ namespace alang {
       Stack& s = get_stack(thread);
       say(pop(s), cout);
       cout << endl;
-    });
-
-    let_prim(env, "=", [&vm](Thread& thread, Pos pos) {
-      Stack& s = get_stack(thread);
-      Val r = pop(s);
-      push(s, vm.Bool, pop(s) == r);
-    });
-
-    let_prim(env, "<", [&vm](Thread& thread, Pos pos) {
-      Stack& s = get_stack(thread);
-      Val r = pop(s);
-      push(s, vm.Bool, pop(s) < r);
-    });
-
-    let_prim(env, ">", [&vm](Thread& thread, Pos pos) {
-      Stack& s = get_stack(thread);
-      Val r = pop(s);
-      push(s, vm.Bool, pop(s) > r);
     });
 
     let(env, "T", vm.Bool, true);
