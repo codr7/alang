@@ -16,9 +16,38 @@ Alang v0.3
 Press Return on empty line to eval.
 Empty eval clears stack and Ctrl+D exits.
 
-: 42
-  
-[42]
+: let fib sub(
+  if (cp .< 2) _ (
+    + (.- 1 cp recall)
+      (sw .- 1 recall)
+  )
+)
+      
+[]
+: fib(20)
+ 
+[6765]
+```
+
+### design
+The language works more or less like a Forth, with a few minor syntactic additions.
+
+Prefixing an identifier with a `.` allows it to be used infix, ie. the target will take it's first argument from the stack.
+
+Suffixing an identifier with an argument list allows specifying arguments explicitly inline, passing `_` as parameter splices a value from the stack.
+
+The point is not that Forth is better than any other language, it's just the lowest common denominator I've found; on top of this you can build pretty much any kind of language and still reuse most of the foundation.
+
+```
+: + 1 2
+
+[3]
+: 1 .+ 2
+
+[3 3]
+: 5 -(_ 2)
+
+[3 3 3]
 ```
 
 ### stacks

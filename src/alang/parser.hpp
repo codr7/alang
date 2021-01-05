@@ -37,7 +37,7 @@ namespace alang {
 
   inline bool parse_id(Parser& parser, char c, istream& in) {
     Pos p = parser.pos;
-    if (!lgpp::parse_id_pred(parser, c, in, [](auto c) { return c != '('; })) { return false; }
+    if (!lgpp::parse_id_pred(parser, c, in, [](auto c) { return c != '(' && c != ')' && c != ']'; })) { return false; }
     string id = pop_back(parser).as<lgpp::toks::Id>().name;
     
     if (in.get(c)) {

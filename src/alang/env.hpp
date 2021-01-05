@@ -14,6 +14,8 @@
 #include <lgpp/ops/lt.hpp>
 #include <lgpp/ops/return.hpp>
 #include <lgpp/ops/or.hpp>
+#include <lgpp/ops/rec.hpp>
+#include <lgpp/ops/recall.hpp>
 #include <lgpp/ops/rot.hpp>
 #include <lgpp/ops/sub.hpp>
 #include <lgpp/ops/type_of.hpp>
@@ -129,6 +131,8 @@ namespace alang {
       emit<ops::Or>(out);
     });
 
+    let_macro(env, "rec", [](Toque& in, Thread &out, Env& env) { emit<ops::Rec>(out); });
+    let_macro(env, "recall", [](Toque& in, Thread &out, Env& env) { emit<ops::Recall>(out); });
     let_macro(env, "rot", [](Toque& in, Thread &out, Env& env) { emit<ops::Rot>(out); });
 
     let_macro(env, "sub", [&vm](Toque& in, Thread &out, Env& env) {
@@ -136,7 +140,7 @@ namespace alang {
       emit<ops::Go>(out, skip);
       Label& sub = push_label(out, nullopt, emit_pc(out));
       compile(pop(in), in, out, env);
-      emit<ops::Stop>(out);
+      emit<ops::Return>(out);
       skip.pc = emit_pc(out);
       emit<ops::Push>(out, vm.Sub, &sub);
     });
